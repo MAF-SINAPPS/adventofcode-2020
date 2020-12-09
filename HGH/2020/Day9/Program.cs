@@ -60,7 +60,6 @@ namespace AdventOfCode
                 }
             }
             Console.WriteLine(result);
-
             Console.ReadLine();
         }
     }
