@@ -17,18 +17,17 @@ namespace day18
             {
                 var expression = item;
                 expression = String.Concat(expression.Where(c => !Char.IsWhiteSpace(c)));//trim
-                string pattern = @"\([0-9*+-]*\)";// @"(\(\d+[*-+]\d+\))";
+                string pattern = @"\([0-9\*\+]*\)";// @"(\(\d+[*-+]\d+\))";
                 Regex processBracket = new Regex(pattern);
                 MatchCollection matches = processBracket.Matches(expression);
                 while (matches.Any())
                 {
                     var localExpression = matches[0].ToString();
-                    expression = expression.Replace(localExpression, Process(localExpression).ToString());
-
+                    expression = processBracket.Replace(expression, Process(localExpression).ToString(), 1);
 
                     matches = processBracket.Matches(expression);
                 }
-                
+
                 l.Add((item, Process(expression)));
                 sum += Process(expression);
             }
@@ -42,16 +41,18 @@ namespace day18
             var op = new char[] { '*', '-', '+' };
 
             input = String.Concat(input.Where(c => char.IsDigit(c) || op.Contains(c)));//remove ()
-            string pattern = @"(\d+)([\+\-\*])(\d+)";
-            Regex processBracket = new Regex(pattern);
-            MatchCollection matches = processBracket.Matches(input);
-            while (matches.Any())
+            string[] patterns = { @"(\d+)([\+])(\d+)", @"(\d+)([\*])(\d+)" };
+            foreach (var pattern in patterns)
             {
-                var localExpression = matches[0].ToString();
-                input = NewMethod(localExpression).ToString() + input.Substring(localExpression.Length);
-                matches = processBracket.Matches(input);
+                Regex processBracket = new Regex(pattern);
+                MatchCollection matches = processBracket.Matches(input);
+                while (matches.Any())
+                {
+                    var localExpression = matches[0].ToString();
+                    input = processBracket.Replace(input, NewMethod(localExpression).ToString(), 1);
+                    matches = processBracket.Matches(input);
+                }
             }
-
 
             return long.Parse(input);
         }
