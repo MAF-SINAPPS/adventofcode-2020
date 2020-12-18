@@ -13,8 +13,10 @@ namespace day11
             map = File.ReadAllLines("input.txt");
             var changed = true;
             int count = 0;
-           
 
+            //var kk = Adjacent(3, 4).Where(_ => _ == '#').Count();
+            //  var kk = Adjacent(3, 3).Where(_ => _ == '#').Count();
+            var kk = Adjacent(1, 1).Where(_ => _ == '#').Count();
             while (changed)
             {
                 changed = false;
@@ -25,26 +27,20 @@ namespace day11
                     {
                         if (map[line][x] == 'L' && !Adjacent(x, line).Contains('#'))
                         {
-                            //var arr = map[line].ToCharArray();
-                            //arr[x] = '#';
-                            //map[line] = new String(arr);
                             qdiese.Add((line, x));
                             changed = true;
                         }
-                     
 
-                        if (map[line][x] == '#' && Adjacent(x, line).Where( _ => _ == '#').Count() >= 4)
+
+                        if (map[line][x] == '#' && Adjacent(x, line).Where(_ => _ == '#').Count() >= 5)
                         {
-                            //var arr = map[line].ToCharArray();
-                            //arr[x] = 'L';
-                            //map[line] = new String(arr);
                             qL.Add((line, x));
                             changed = true;
-                        }                     
+                        }
 
                     }
 
-               foreach(var item in qdiese)
+                foreach (var item in qdiese)
                 {
                     var arr = map[item.Item1].ToCharArray();
                     arr[item.Item2] = '#';
@@ -61,29 +57,85 @@ namespace day11
                 count++;
             }
 
-            var c = map.SelectMany(x => x).Where(_ => _ == '#').Count();
+            var c = map.SelectMany(x => x).Count();
             Console.WriteLine(c);
         }
 
         static char[] Adjacent(int x, int line)
         {
             var adj = new List<char>();
-            if (x > 0)
-                adj.Add(map[line][x - 1]);
-            if (map[line].Length > (x + 1))
-                adj.Add(map[line][x + 1]);
-            if (line > 0)
-                adj.Add(map[line - 1][x]);
-            if ((line + 1) < map.Length)
-                adj.Add(map[line + 1][x]);
-            if (line > 0 && x > 0)
-                adj.Add(map[line - 1][x - 1]);
-            if (line > 0 && map[line].Length > (x + 1))
-                adj.Add(map[line - 1][x + 1]);
-            if ((line + 1) < map.Length && x > 0)
-                adj.Add(map[line + 1][x - 1]);
-            if ((line + 1) < map.Length && map[line].Length > (x + 1))
-                adj.Add(map[line + 1][x + 1]);
+
+
+
+            //for (int i = 1; (x + i) < map[line].Length; i++)
+            //    if (map[line][x + i] != '.')
+            //    {
+            //        adj.Add(map[line][x + i]);
+            //        break;
+            //    }
+
+
+            //for (int i = 1; (x - i) >= 0; i++)
+            //    if (map[line][x - i] != '.')
+            //    {
+            //        adj.Add(map[line][x - i]);
+            //        break;
+            //    }
+
+
+
+            //for (int i = 1; (line + i) < map.Length; i++)
+            //    if (map[line + i][x] != '.')
+            //    {
+            //        adj.Add(map[line + i][x]);
+            //        break;
+            //    }
+
+
+            //for (int i = 1; (line - i) >= 0; i++)
+            //    if (map[line - i][x] != '.')
+            //    {
+            //        adj.Add(map[line - i][x]);
+            //        break;
+            //    }
+
+
+
+            for (int i = 1; ((line + i) < map.Length) && (x + i) < map[line].Length; i++)
+            {
+                if (map[line + i][x + i] != '.')
+                {
+                    adj.Add(map[line + i][x + i]); break;
+                }
+            }
+
+
+            for (int i = 1; ((line + i) < map.Length) && (x - i) >= 0; i++)
+            {
+                if (map[line + i][x - i] != '.')
+                {
+                    adj.Add(map[line + i][x - i]);
+                    break;
+                }
+            }
+
+            for (int i = 1; (line - i) >= 0 && (x + i) < map[line].Length; i++)
+            {
+                if (map[line - i][x + i] != '.')
+                {
+                    adj.Add(map[line - i][x + i]);
+                    break;
+                }
+            }
+
+            for (int i = 1; (line - i) > 0 && (x - i) >= 0; i++)
+            {
+                if (map[line - i][x - i] != '.')
+                {
+                    adj.Add(map[line - i][x - i]);
+                    break;
+                }
+            }
 
             return adj.ToArray();
         }
