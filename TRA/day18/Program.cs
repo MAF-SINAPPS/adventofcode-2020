@@ -22,16 +22,18 @@ namespace day18
                 MatchCollection matches = processBracket.Matches(expression);
                 while (matches.Any())
                 {
-                    var localExpression = matches[0].ToString();Console.WriteLine(expression);
+                    var localExpression = matches[0].ToString();
                     expression = expression.Replace(localExpression, Process(localExpression).ToString());
 
 
                     matches = processBracket.Matches(expression);
                 }
-                Console.WriteLine(expression);
+                
                 l.Add((item, Process(expression)));
                 sum += Process(expression);
             }
+
+            Console.WriteLine(sum);
         }
 
         static long Process(string input)
@@ -46,7 +48,7 @@ namespace day18
             while (matches.Any())
             {
                 var localExpression = matches[0].ToString();
-                input = input.Replace(localExpression, NewMethod(localExpression).ToString());
+                input = NewMethod(localExpression).ToString() + input.Substring(localExpression.Length);
                 matches = processBracket.Matches(input);
             }
 
